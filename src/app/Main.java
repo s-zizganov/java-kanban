@@ -1,3 +1,11 @@
+package app;
+
+import entity.Epic;
+import entity.Status;
+import entity.Subtask;
+import entity.Task;
+import manager.TaskManager;
+
 public class Main {
     public static void main(String[] args) {
 
