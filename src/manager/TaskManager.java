@@ -79,7 +79,7 @@ public class TaskManager {
     }
 
 
-    public ArrayList<Epic> getAllEpics() {// возвращаем все эпики
+    public ArrayList<Epic> getAllEpics() {    // возвращаем все эпики
         return new ArrayList<>(epics.values());
     }
 
