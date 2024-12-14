@@ -55,10 +55,6 @@ public class Main {
         System.out.println("Сабтаски эпика 1: " + taskManager.getSubtasksForEpic(epic1.getId()));
         System.out.println("Сабтаски эпика 2: " + taskManager.getSubtasksForEpic(epic2.getId()));
         System.out.println("Сабтаски эпика 3: " + taskManager.getSubtasksForEpic(epic3.getId()));
-
-
-
-
     }
 
 
