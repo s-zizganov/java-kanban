@@ -19,8 +19,6 @@ public class Main {
         taskManager.addTask(task3);
 
 
-
-
         Epic epic1 = new Epic("Эпик 1", "Описание эпика 1");
         Epic epic2 = new Epic("Эпик 2", "Описание эпика 2");
         Epic epic3 = new Epic("Эпик 3", "Описание эпика 3");
@@ -55,10 +53,6 @@ public class Main {
         System.out.println("Сабтаски эпика 1: " + taskManager.getSubtasksForEpic(epic1.getId()));
         System.out.println("Сабтаски эпика 2: " + taskManager.getSubtasksForEpic(epic2.getId()));
         System.out.println("Сабтаски эпика 3: " + taskManager.getSubtasksForEpic(epic3.getId()));
-
-
-
-
     }
 
 

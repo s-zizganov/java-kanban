@@ -47,11 +47,9 @@ public class TaskManager {
     }
 
 
-    public void clearTasks() {//удаление всех задач
+    public void clearTasks() { //удаление всех задач
         tasks.clear();
     }
-
-
 
 
 // Методы для работы с эпиками Epic:
@@ -79,7 +77,7 @@ public class TaskManager {
     }
 
 
-    public ArrayList<Epic> getAllEpics() {// возвращаем все эпики
+    public ArrayList<Epic> getAllEpics() { // возвращаем все эпики
         return new ArrayList<>(epics.values());
     }
 
@@ -90,12 +88,10 @@ public class TaskManager {
     }
 
 
-
-
 //Методы для работы с сабтасками Subtask:
 
-    public void addSubtask (Subtask subtask) {
-        int id = createId();// создаем ИД
+    public void addSubtask(Subtask subtask) {
+        int id = createId(); // создаем ИД
         subtask.setId(id); // назнчаем ИД для сабтаска
         subtasks.put(id, subtask); // сохраняем сабтаск в хешмап
         Epic epic = epics.get(subtask.getEpicId()); // получаем эпик куда принадлежит сабтаск
@@ -118,7 +114,7 @@ public class TaskManager {
     }
 
 
-    public Subtask getSubtask(int id) {// получаем сабтаск по ИД
+    public Subtask getSubtask(int id) { // получаем сабтаск по ИД
         return subtasks.get(id);
     }
 
@@ -127,17 +123,18 @@ public class TaskManager {
         ArrayList<Subtask> result = new ArrayList<>();
         Epic epic = epics.get(epicId); // Находим эпик
         if (epic != null) {
-            for (int subtaskID :epic.getSubtaskIdList()) { // Добавляем все сабтаски эпика в список
+            for (int subtaskID : epic.getSubtaskIdList()) { // Добавляем все сабтаски эпика в список
                 result.add(subtasks.get(subtaskID));
             }
-        } return result;
+        }
+        return result;
     }
 
 
-    public void updateEpicStatus (Epic epic) {
+    public void updateEpicStatus(Epic epic) {
         ArrayList<Integer> subtaskIDList = epic.getSubtaskIdList(); // получаем ИД всех сабтасков
         if (subtaskIDList.isEmpty()) {
-            epic.setStatus(Status.NEW);// если нет сабтаксов в эпике, то статус эпика - NEW
+            epic.setStatus(Status.NEW); // если нет сабтаксов в эпике, то статус эпика - NEW
             return;
         }
 
@@ -163,10 +160,6 @@ public class TaskManager {
         }
 
     }
-
-
-
-
 
 
 }
