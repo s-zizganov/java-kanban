@@ -1,5 +1,7 @@
 package entity;
 
+import java.util.Objects;
+
 public class Subtask extends Task {
 
     private int epicId; // ИД эпика, к которой привязан сабтаск
@@ -7,6 +9,7 @@ public class Subtask extends Task {
     public Subtask(String name, String description, Status status, int epicId) {
         super(name, description, status);
         this.epicId = epicId;
+
     }
 
 
@@ -29,7 +32,5 @@ public class Subtask extends Task {
                 ", epicID=" + epicId +
                 "}";
     }
-
-
 
 }

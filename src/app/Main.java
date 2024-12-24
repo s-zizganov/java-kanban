@@ -4,12 +4,14 @@ import entity.Epic;
 import entity.Status;
 import entity.Subtask;
 import entity.Task;
+import manager.InMemoryTaskManager;
 import manager.TaskManager;
 
 public class Main {
     public static void main(String[] args) {
 
-        TaskManager taskManager = new TaskManager();
+        TaskManager taskManager = new InMemoryTaskManager(); // Теперь для работы с таск менеджером используем
+        // ссылку для работы с интерфейсом
 
         Task task1 = new Task("Задача 1", "Описание 1", Status.NEW);
         Task task2 = new Task("Задача 2", "Описание 2", Status.IN_PROGRESS);
@@ -55,6 +57,28 @@ public class Main {
         System.out.println("Сабтаски эпика 1: " + taskManager.getSubtasksForEpic(epic1.getId()));
         System.out.println("Сабтаски эпика 2: " + taskManager.getSubtasksForEpic(epic2.getId()));
         System.out.println("Сабтаски эпика 3: " + taskManager.getSubtasksForEpic(epic3.getId()));
+
+
+
+        // Обновление задачи
+        task1.setDescription("Новое описание задачи 1");
+        task1.setStatus(Status.DONE);
+        taskManager.updateTask(task1);
+
+
+        // Удаление задачи
+        taskManager.deleteTask(task2.getId());
+
+        // Удаление эпика
+        taskManager.deleteEpic(epic1.getId());
+
+        // Итоговое состояние задач
+        System.out.println("Все задачи после обновлений и удалений: ");
+        System.out.println(taskManager.getAllTasks());
+
+        System.out.println("Все эпики после обновлений и удалений: ");
+        System.out.println(taskManager.getAllEpics());
+
 
 
 
