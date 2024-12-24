@@ -14,7 +14,7 @@ public class Epic extends Task {
     }
 
 
-    public ArrayList<Integer> getSubtaskIdList() {// получение списка ID подзадач
+    public ArrayList<Integer> getSubtaskIdList() { // получение списка ID подзадач
         return subtaskIdList;
     }
 
@@ -24,7 +24,7 @@ public class Epic extends Task {
     }
 
 
-    public void deleteSubtask(int subtaskId) {// метод для удаления сабтаска из эпика
+    public void deleteSubtask(int subtaskId) { // метод для удаления сабтаска из эпика
         subtaskIdList.remove((Integer) subtaskId);
     }
 
