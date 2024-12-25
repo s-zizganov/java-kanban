@@ -21,8 +21,6 @@ public class Main {
         taskManager.addTask(task3);
 
 
-
-
         Epic epic1 = new Epic("Эпик 1", "Описание эпика 1");
         Epic epic2 = new Epic("Эпик 2", "Описание эпика 2");
         Epic epic3 = new Epic("Эпик 3", "Описание эпика 3");
@@ -52,12 +50,36 @@ public class Main {
         taskManager.addSubtask(subtask9);
 
 
-        System.out.println("Задачи: " + taskManager.getAllTasks());
-        System.out.println("Эпики: " + taskManager.getAllEpics());
-        System.out.println("Сабтаски эпика 1: " + taskManager.getSubtasksForEpic(epic1.getId()));
-        System.out.println("Сабтаски эпика 2: " + taskManager.getSubtasksForEpic(epic2.getId()));
-        System.out.println("Сабтаски эпика 3: " + taskManager.getSubtasksForEpic(epic3.getId()));
+        // Вывод текущего состояния задач и эпиков с использованием String.format
+        System.out.println("Задачи:");
+        for (Task task : taskManager.getAllTasks()) {
+            System.out.println(String.format(" - ID: %d, Название: %s, Описание: %s, Статус: %s",
+                    task.getId(), task.getName(), task.getDescription(), task.getStatus()));
+        }
 
+        System.out.println("\nЭпики:");
+        for (Epic epic : taskManager.getAllEpics()) {
+            System.out.println(String.format(" - ID: %d, Название: %s, Описание: %s, Статус: %s",
+                    epic.getId(), epic.getName(), epic.getDescription(), epic.getStatus()));
+        }
+
+        System.out.println("\nСабтаски эпика 1:");
+        for (Subtask subtask : taskManager.getSubtasksForEpic(epic1.getId())) {
+            System.out.println(String.format(" - ID: %d, Название: %s, Описание: %s, Статус: %s",
+                    subtask.getId(), subtask.getName(), subtask.getDescription(), subtask.getStatus()));
+        }
+
+        System.out.println("\nСабтаски эпика 2:");
+        for (Subtask subtask : taskManager.getSubtasksForEpic(epic2.getId())) {
+            System.out.println(String.format(" - ID: %d, Название: %s, Описание: %s, Статус: %s",
+                    subtask.getId(), subtask.getName(), subtask.getDescription(), subtask.getStatus()));
+        }
+
+        System.out.println("\nСабтаски эпика 3:");
+        for (Subtask subtask : taskManager.getSubtasksForEpic(epic3.getId())) {
+            System.out.println(String.format(" - ID: %d, Название: %s, Описание: %s, Статус: %s",
+                    subtask.getId(), subtask.getName(), subtask.getDescription(), subtask.getStatus()));
+        }
 
 
         // Обновление задачи
@@ -65,25 +87,48 @@ public class Main {
         task1.setStatus(Status.DONE);
         taskManager.updateTask(task1);
 
-
         // Удаление задачи
         taskManager.deleteTask(task2.getId());
 
         // Удаление эпика
         taskManager.deleteEpic(epic1.getId());
 
+        // Удаление сабтаска
+        taskManager.deleteSubtask(subtask8.getId());
+
+
         // Итоговое состояние задач
-        System.out.println("Все задачи после обновлений и удалений: ");
-        System.out.println(taskManager.getAllTasks());
+        System.out.println("\n\n\n\nУдаление:");
+        System.out.println(String.format(" - ID: %d, Название: %s, Описание: %s, Статус: %s", task2.getId(),
+                task2.getName(), task2.getDescription(), task2.getStatus()));
+        System.out.println(String.format(" - ID: %d, Название: %s, Описание: %s, Статус: %s", epic1.getId(),
+                epic1.getName(), epic1.getDescription(), epic1.getStatus()));
+        System.out.println(String.format(" - ID: %d, Название: %s, Описание: %s, Статус: %s", subtask8.getId(),
+                subtask8.getName(), subtask8.getDescription(), subtask8.getStatus()));
 
-        System.out.println("Все эпики после обновлений и удалений: ");
-        System.out.println(taskManager.getAllEpics());
+
+        System.out.println("\nОбновление:");
+        System.out.println(String.format(" - ID: %d, Название: %s, Описание: %s, Статус: %s", task1.getId(),
+                task1.getName(), task1.getDescription(), task1.getStatus()));
 
 
+        System.out.println("\n\n\n\nВсе задачи после обновлений и удалений: ");
+        for (Task task : taskManager.getAllTasks()) {
+            System.out.println(String.format(" - ID: %d, Название: %s, Описание: %s, Статус: %s",
+                    task.getId(), task.getName(), task.getDescription(), task.getStatus()));
+        }
 
+        System.out.println("\nВсе эпики после обновлений и удалений: ");
+        for (Epic epic : taskManager.getAllEpics()) {
+            System.out.println(String.format(" - ID: %d, Название: %s, Описание: %s, Статус: %s",
+                    epic.getId(), epic.getName(), epic.getDescription(), epic.getStatus()));
+        }
 
+        System.out.println("\nВсе сабтаски после обновлений и удалений: ");
+        for (Subtask subtask : taskManager.getAllSubtask()) {
+            System.out.println(String.format(" - ID: %d, Название: %s, Описание: %s, Статус: %s",
+                    subtask.getId(), subtask.getName(), subtask.getDescription(), subtask.getStatus()));
+        }
 
     }
-
-
 }
