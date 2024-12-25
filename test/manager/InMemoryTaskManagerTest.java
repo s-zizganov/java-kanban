@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 class InMemoryTaskManagerTest {
 
     private TaskManager taskManager;
@@ -18,7 +19,7 @@ class InMemoryTaskManagerTest {
         taskManager = Managers.getDefaultManger();
     }
 
-    //
+    //Проверка на корректность добавления задачи
     @Test
     void addTask() {
         String name = "Сделать ТЗ";
@@ -58,7 +59,6 @@ class InMemoryTaskManagerTest {
         // Проверка равенства эпиков по id
         Assertions.assertEquals(epic1, epic2, "Epics with the same ID should be equal.");
     }
-
     @Test
     void subtasksShouldBeEqualIfIdsAreEqual() {
         Subtask subtask1 = new Subtask("Subtask 1", "Description Subtask 1", Status.NEW, 2);
@@ -87,7 +87,7 @@ class InMemoryTaskManagerTest {
     }
 
 
-    // проверьте, что InMemoryTaskManager действительно добавляет задачи разного типа и может найти их по id;
+    // Проверьте, что InMemoryTaskManager действительно добавляет задачи разного типа и может найти их по id;
     @Test
     void testAddDifferentTypes() {
         // Создаём задачи
@@ -124,7 +124,7 @@ class InMemoryTaskManagerTest {
     }
 
 
-    //проверьте, что задачи с заданным id и сгенерированным id не конфликтуют внутри менеджера;
+    // Проверьте, что задачи с заданным id и сгенерированным id не конфликтуют внутри менеджера;
     @Test
     void testTaskWithCustomAndGeneratedId() {
         // Создаём задачу с заданным id
@@ -159,7 +159,7 @@ class InMemoryTaskManagerTest {
     }
 
 
-    // тест, в котором проверяется неизменность задачи (по всем полям) при добавлении задачи в менеджер
+    // Тест, в котором проверяется неизменность задачи (по всем полям) при добавлении задачи в менеджер
     @Test
     void taskShouldRemainUnchangedInTaskManager() {
         // Создаём новую задачу
@@ -179,7 +179,7 @@ class InMemoryTaskManagerTest {
     }
 
 
-    // убедитесь, что задачи, добавляемые в HistoryManager, сохраняют предыдущую версию задачи и её данных.
+    // Убедитесь, что задачи, добавляемые в HistoryManager, сохраняют предыдущую версию задачи и её данных.
     @Test
     void historyManagerShouldPreserveTaskData() {
 
