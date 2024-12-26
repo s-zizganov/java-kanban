@@ -4,7 +4,7 @@ import entity.Task;
 
 import java.util.ArrayList;
 
-public class InMemoryHistoryManager implements HistoryManager{
+public class InMemoryHistoryManager implements HistoryManager {
     private ArrayList<Task> history = new ArrayList<>(); // создали список для хранения истории
 
     private static final int HISTORY_LIMIT = 10; // создали лимит

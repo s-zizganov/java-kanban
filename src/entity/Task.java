@@ -57,8 +57,6 @@ public class Task {
     }
 
 
-
-
     @Override
     public String toString() {
         return "Task{" +
@@ -84,8 +82,6 @@ public class Task {
     public int hashCode() {
         return Objects.hashCode(id);
     }
-
-
 }
 
 

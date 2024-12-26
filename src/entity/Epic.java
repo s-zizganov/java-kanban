@@ -1,8 +1,6 @@
 package entity;
 
 import java.util.ArrayList;
-import java.util.Objects;
-
 
 public class Epic extends Task {
 
@@ -31,13 +29,7 @@ public class Epic extends Task {
 
     @Override
     public String toString() { // переопределяем toString для чтения эпика
-        return "Epic{" +
-                "id=" + getId() +
-                ", name='" + getName() + "'" +
-                ", description='" + getDescription() + "'" +
-                ", status=" + getStatus() +
-                ", subtaskIdList=" + subtaskIdList +
-                "}";
+        return "Epic{" + "id=" + getId() + ", name='" + getName() + "'" + ", description='" + getDescription() + "'" +
+                ", status=" + getStatus() + ", subtaskIdList=" + subtaskIdList + "}";
     }
-
 }

@@ -24,15 +24,7 @@ public class Subtask extends Task {
 
     @Override
     public String toString() { //переопределяем toString для чтения сабтаска
-        return "Subtask{" +
-                "id=" + getId() +
-                ", name='" + getName() + "'" +
-                ", description='" + getDescription() + "'" +
-                ", status=" + getStatus() +
-                ", epicID=" + epicId +
-                "}";
+        return "Subtask{" + "id=" + getId() + ", name='" + getName() + "'" + ", description='" + getDescription() +
+                "'" + ", status=" + getStatus() + ", epicID=" + epicId + "}";
     }
-
-
-
 }

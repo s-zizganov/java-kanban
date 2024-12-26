@@ -19,17 +19,14 @@ public class InMemoryTaskManager implements TaskManager {
     private HistoryManager historyManager = Managers.getDefaultHistory();
 
 
-
     private int createId() { // метод для создания ИД
         return ++idCounter;
     }
 
 
-
-
     // Реализация методов интерфейса:
 
-// Методы для работы с задачами Task:
+    // Методы для работы с задачами Task:
     @Override
     public Task addTask(Task task) {
         int id = createId(); // создаем id
@@ -50,7 +47,8 @@ public class InMemoryTaskManager implements TaskManager {
         Task task = tasks.get(id);
         if (task != null) {
             historyManager.add(task);
-        } return task;
+        }
+        return task;
     }
 
 
@@ -75,7 +73,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
 
-// Методы для работы с эпиками Epic:
+    // Методы для работы с эпиками Epic:
     @Override
     public void addEpic(Epic epic) {
         int id = createId(); // создаем ИД
@@ -127,7 +125,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
 
-//Методы для работы с сабтасками Subtask:
+    //Методы для работы с сабтасками Subtask:
     @Override
     public void addSubtask(Subtask subtask) {
         int id = createId();// создаем ИД
@@ -169,10 +167,11 @@ public class InMemoryTaskManager implements TaskManager {
         ArrayList<Subtask> result = new ArrayList<>();
         Epic epic = epics.get(epicId); // Находим эпик
         if (epic != null) {
-            for (int subtaskID :epic.getSubtaskIdList()) { // Добавляем все сабтаски эпика в список
+            for (int subtaskID : epic.getSubtaskIdList()) { // Добавляем все сабтаски эпика в список
                 result.add(subtasks.get(subtaskID));
             }
-        } return result;
+        }
+        return result;
     }
 
 
@@ -221,8 +220,9 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-
-
-
+    @Override
+    public ArrayList<Subtask> getAllSubtask() {
+        return new ArrayList<>(subtasks.values());
+    }
 
 }
