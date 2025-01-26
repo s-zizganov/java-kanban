@@ -28,7 +28,8 @@ public class InMemoryHistoryManagerTest {
     }
 
 
-    @Test // задачи корректно добавляются в историю и сохраняются в правильном порядке.
+    @Test
+        // задачи корректно добавляются в историю и сохраняются в правильном порядке.
     void historyManagerShouldCorrectlyAddTasks() {
         taskManager = Managers.getDefaultManger();
 
@@ -56,7 +57,8 @@ public class InMemoryHistoryManagerTest {
     }
 
 
-    @Test // Задачи корректно удаляются из истории.
+    @Test
+        // Задачи корректно удаляются из истории.
     void historyManagerShouldRemoveTasksCorrectly() {
         taskManager = Managers.getDefaultManger();
 
@@ -88,7 +90,8 @@ public class InMemoryHistoryManagerTest {
     }
 
 
-    @Test //  история не содержит дубликатов задач.+++
+    @Test
+        //  история не содержит дубликатов задач.+++
     void historyManagerShouldNotAllowDuplicates() {
         HistoryManager historyManager = Managers.getDefaultHistory();
         Task task = new Task("Task 1", "Description 1", Status.NEW);
@@ -104,7 +107,8 @@ public class InMemoryHistoryManagerTest {
         assertEquals(1, history.size());
     }
 
-  @Test// после удаления подзадачи её ID больше не хранится в эпике ++++
+    @Test
+// после удаления подзадачи её ID больше не хранится в эпике ++++
     void subtaskShouldNotHaveOldIdAfterDeletion() {
         taskManager = Managers.getDefaultManger();
 
@@ -124,7 +128,8 @@ public class InMemoryHistoryManagerTest {
         assertFalse(epic.getSubtaskIdList().contains(subtaskId));
     }
 
-    @Test // эпик не содержит ID удаленных подзадач. ++++
+    @Test
+        // эпик не содержит ID удаленных подзадач. ++++
     void epicShouldNotContainDeletedSubtaskIds() {
         taskManager = Managers.getDefaultManger();
 
@@ -145,7 +150,8 @@ public class InMemoryHistoryManagerTest {
         assertTrue(epic.getSubtaskIdList().contains(subtask2.getId()), "Эпик должен содержать ID оставшейся подзадачи.");
     }
 
-    @Test // изменения полей задачи через сеттеры корректно сохраняются. ++++
+    @Test
+        // изменения полей задачи через сеттеры корректно сохраняются. ++++
     void taskFieldsShouldBeConsistentAfterModification() {
         taskManager = Managers.getDefaultManger();
 

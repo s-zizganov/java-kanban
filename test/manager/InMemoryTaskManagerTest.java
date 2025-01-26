@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.LinkedList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -61,6 +60,7 @@ class InMemoryTaskManagerTest {
         // Проверка равенства эпиков по id
         Assertions.assertEquals(epic1, epic2, "Epics with the same ID should be equal.");
     }
+
     @Test
     void subtasksShouldBeEqualIfIdsAreEqual() {
         Subtask subtask1 = new Subtask("Subtask 1", "Description Subtask 1", Status.NEW, 2);
