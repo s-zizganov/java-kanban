@@ -14,8 +14,8 @@ public class InMemoryHistoryManager implements HistoryManager {
 
 
     // Метод добавления задачи в конец списка
-    private void linkLast (Task task) {
-        Node<Task> newNode = new Node <>(task); // Создаем новый узел с данными задачи
+    private void linkLast(Task task) {
+        Node<Task> newNode = new Node<>(task); // Создаем новый узел с данными задачи
         if (head == null) { // Если список пустой устанавливаем голову и хвост
             tail = newNode;
             head = newNode;
@@ -30,7 +30,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     // Собираем все задачи в ArrayList
     private ArrayList<Task> getTasks() {
-        ArrayList <Task> tasks = new ArrayList<>(); // Создаем пустой список, который будет хранить объекты типа Task
+        ArrayList<Task> tasks = new ArrayList<>(); // Создаем пустой список, который будет хранить объекты типа Task
         Node<Task> curentNode = head; // Инициализируем переменную currentNode значением головы списка
         while (curentNode != null) { // Пока текущий узел не является null (конец списка)
             tasks.add(curentNode.data); // Добавляем данные текущего узла (задачу) в список tasks
@@ -64,7 +64,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (node.previous != null) { // Если узел не первый, перепривязываем предыдущий
             node.previous.next = node.next; // Обновляем ссылку "next" предыдущего узла, чтобы она указывала на
             // следующий узел текущего узла node.next
-        // 2. Обновление головы
+            // 2. Обновление головы
         } else { // Если узел первый, перемещаем голову
             head = node.next; // Обновляем голову, чтобы она указывала на следующий узел текущего узла node.next
         }

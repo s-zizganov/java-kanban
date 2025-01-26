@@ -59,7 +59,7 @@ public class InMemoryTaskManager implements TaskManager {
 
 
     @Override
-    public void clearTasks() {//удаление всех задач
+    public void clearTasks() { //удаление всех задач
         tasks.clear();
     }
 
@@ -71,8 +71,6 @@ public class InMemoryTaskManager implements TaskManager {
             tasks.put(task.getId(), task);
         }
     }
-
-
 
 
     // Методы для работы с эпиками Epic:
@@ -107,7 +105,7 @@ public class InMemoryTaskManager implements TaskManager {
 
 
     @Override
-    public ArrayList<Epic> getAllEpics() {// возвращаем все эпики
+    public ArrayList<Epic> getAllEpics() { // возвращаем все эпики
         return new ArrayList<>(epics.values());
     }
 
@@ -125,8 +123,6 @@ public class InMemoryTaskManager implements TaskManager {
             epics.put(epic.getId(), epic);
         }
     }
-
-
 
 
     //Методы для работы с сабтасками Subtask:
