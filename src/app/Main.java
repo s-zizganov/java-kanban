@@ -4,8 +4,12 @@ import entity.Epic;
 import entity.Status;
 import entity.Subtask;
 import entity.Task;
+import manager.HistoryManager;
 import manager.InMemoryTaskManager;
+import manager.Managers;
 import manager.TaskManager;
+
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -19,6 +23,19 @@ public class Main {
         taskManager.addTask(task1);
         taskManager.addTask(task2);
         taskManager.addTask(task3);
+
+        HistoryManager historyManager = Managers.getDefaultHistory();
+        historyManager.add(task1);
+        historyManager.add(task2);
+        historyManager.add(task1);
+        System.out.println("История: ");
+        for (Task tasks : historyManager.getHistory()) {
+            System.out.println(String.format(" - ID: %d, Название: %s, Описание: %s, Статус: %s",
+                    tasks.getId(), tasks.getName(), tasks.getDescription(), tasks.getStatus()));
+        }
+
+        List<Task> history = historyManager.getHistory();
+        System.out.println(history);
 
 
         Epic epic1 = new Epic("Эпик 1", "Описание эпика 1");

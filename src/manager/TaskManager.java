@@ -52,4 +52,3 @@ public interface TaskManager {
 
     ArrayList<Subtask> getAllSubtask();
 }
-
