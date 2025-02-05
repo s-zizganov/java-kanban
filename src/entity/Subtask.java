@@ -2,6 +2,7 @@ package entity;
 
 import manager.TaskType;
 
+
 public class Subtask extends Task {
 
     private int epicId; // ИД эпика, к которой привязан сабтаск
