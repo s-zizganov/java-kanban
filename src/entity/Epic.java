@@ -1,14 +1,18 @@
 package entity;
 
+import manager.TaskType;
+
 import java.util.ArrayList;
 
 public class Epic extends Task {
 
     private ArrayList<Integer> subtaskIdList;
+    private TaskType typeTask;
 
     public Epic(String name, String description) {
         super(name, description, Status.NEW);
         this.subtaskIdList = new ArrayList<>();
+        this.typeTask = TaskType.EPIC_TYPE;
     }
 
 
@@ -24,6 +28,10 @@ public class Epic extends Task {
 
     public void deleteSubtask(int subtaskId) { // метод для удаления сабтаска из эпика
         subtaskIdList.remove((Integer) subtaskId);
+    }
+
+    public TaskType getType() {
+        return typeTask;
     }
 
 

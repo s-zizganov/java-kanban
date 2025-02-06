@@ -1,5 +1,7 @@
 package entity;
 
+import manager.TaskType;
+
 import java.util.Objects;
 
 public class Task {
@@ -8,11 +10,13 @@ public class Task {
     private String description;
     private int id;
     private Status status;
+    TaskType typeTask;
 
     public Task(String name, String description, Status status) {
         this.name = name;
         this.description = description;
         this.status = status;
+        this.typeTask = TaskType.TASK_TYPE;
     }
 
     public Task(String name, String description) {
@@ -54,6 +58,14 @@ public class Task {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public TaskType getType() {
+        return typeTask;
+    }
+
+    public void setTypeTask(TaskType typeTask) {
+        this.typeTask = typeTask;
     }
 
 

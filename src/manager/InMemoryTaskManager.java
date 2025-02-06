@@ -12,11 +12,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     private int idCounter = 0; // числовое поле счетчик для генерации идентефикаторов
 
+
     // Создадим хэшмапы для хранения всех видов задач
-    private HashMap<Integer, Task> tasks = new HashMap<>();
-    private HashMap<Integer, Epic> epics = new HashMap<>();
-    private HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    private HistoryManager historyManager = Managers.getDefaultHistory();
+    protected final HashMap<Integer, Task> tasks = new HashMap<>();
+    protected final HashMap<Integer, Epic> epics = new HashMap<>();
+    protected final HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    protected final HistoryManager historyManager = Managers.getDefaultHistory();
 
 
     private int createId() { // метод для создания ИД
