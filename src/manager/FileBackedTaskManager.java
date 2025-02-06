@@ -32,12 +32,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             System.out.println("Загрузка из файла: " + file.getPath());
             br.readLine(); // Пропускаем заголовок файла
 
-            int maxID = 0; // Переменная для отслеживания максимального ID задачи
-
             // Чтение файла построчно
             while (br.ready()) {
                 String line = br.readLine();
-                // System.out.println("Прочитан строка: " + line); // Лог
                 if (line.isEmpty()) {
                     continue; // Пропускаем пустые строки
                 }
@@ -60,11 +57,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
             }
 
-            // System.out.println("Все задачи загружены."); // Лог
-            // System.out.println("Загруженные задачи: " + fileBackedTaskManager.getAllTasks().size()); // Лог
-            // System.out.println("Загруженные эпики: " + fileBackedTaskManager.getAllEpics().size()); // Лог
-            // System.out.println("Загруженные подзадачи: " + fileBackedTaskManager.getAllSubtask().size()); // Лог
-
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка чтения файла" + e.getMessage());
         }
@@ -86,7 +78,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     // Преобразует строку из файла в объект Task
     public static Task fromString(String value) {
-        // System.out.println("Парсим строку: " + value); // Логирование
         String[] params = value.split(",");
 
         if (params.length < 5) {
@@ -142,19 +133,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
             // Сохраняем задачи
             for (Task task : tasks.values()) {
-                //System.out.println("Сохранение задачи: " + toString(task));//  Лог
                 writer.write("\n" + toString(task));
             }
 
             // Сохраняем эпики
             for (Epic epic : epics.values()) {
-                //System.out.println("Сохранение эпика: " + toString(epic)); //  Лог
                 writer.write("\n" + toString(epic));
             }
 
             // Сохраняем подзадачи
             for (Subtask subtask : subtasks.values()) {
-                //System.out.println("Сохранение сабтаска: " + toString(subtask)); //  Лог
                 writer.write("\n" + toString(subtask));
             }
 
