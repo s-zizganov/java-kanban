@@ -4,18 +4,18 @@ import entity.Epic;
 import entity.Status;
 import entity.Subtask;
 import entity.Task;
-import manager.HistoryManager;
-import manager.InMemoryTaskManager;
-import manager.Managers;
-import manager.TaskManager;
 
+import manager.*;
+
+import java.io.IOException;
 import java.util.List;
 
+
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         TaskManager taskManager = new InMemoryTaskManager(); // Теперь для работы с таск менеджером используем
-        // ссылку для работы с интерфейсом
+
 
         Task task1 = new Task("Задача 1", "Описание 1", Status.NEW);
         Task task2 = new Task("Задача 2", "Описание 2", Status.IN_PROGRESS);
@@ -104,11 +104,14 @@ public class Main {
         task1.setStatus(Status.DONE);
         taskManager.updateTask(task1);
 
+
         // Удаление задачи
         taskManager.deleteTask(task2.getId());
 
+
         // Удаление эпика
         taskManager.deleteEpic(epic1.getId());
+
 
         // Удаление сабтаска
         taskManager.deleteSubtask(subtask8.getId());
