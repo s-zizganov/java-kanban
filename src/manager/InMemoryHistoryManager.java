@@ -68,7 +68,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
 
         // 3. Перепривязывание следующего узла
-        if (node.next != null) {// Если узел не последний, обновляем ссылку "previous" следующего узла
+        if (node.next != null) { // Если узел не последний, обновляем ссылку "previous" следующего узла
             node.next.previous = node.previous; // Следующий узел теперь указывает на предыдущий
         } else { // Если узел последний, перемещаем хост
             tail = node.previous; // Если узел был хвостом, хвост перемещается на предыдущий узел
