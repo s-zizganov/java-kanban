@@ -143,8 +143,10 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
         Task receivedGeneratedIdTask = taskManager.getTask(generatedIdTask.getId());
 
         // Проверяем, что обе задачи существуют
-        assertNotNull(receivedCustomIdTask, "Задача с заданным id должна существовать");
-        assertNotNull(receivedGeneratedIdTask, "Задача с сгенерированным id должна существовать");
+        assertNotNull(receivedCustomIdTask, "Задача с заданным id=" + receivedCustomIdTask.getId() +
+                " должна существовать");
+        assertNotNull(receivedGeneratedIdTask, "Задача с сгенерированным id=" + receivedGeneratedIdTask.getId() +
+                " должна существовать");
 
         // Проверяем поля задачи с заданным ID
         assertEquals(customIdTask.getName(), receivedCustomIdTask.getName());
@@ -152,6 +154,7 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
         assertEquals(customIdTask.getStatus(), receivedCustomIdTask.getStatus());
 
         // Проверяем поля задачи со сгенерированным ID
+
         assertEquals(generatedIdTask.getName(), receivedGeneratedIdTask.getName());
         assertEquals(generatedIdTask.getDescription(), receivedGeneratedIdTask.getDescription());
         assertEquals(generatedIdTask.getStatus(), receivedGeneratedIdTask.getStatus());
