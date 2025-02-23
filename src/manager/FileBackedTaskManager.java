@@ -4,120 +4,139 @@ import entity.Epic;
 import entity.Status;
 import entity.Subtask;
 import entity.Task;
-import exception.ManagerSaveException;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 
-/*
-Класс FileBackedTaskManager добавляет функциональность
-для сохранения и загрузки задач, эпиков и подзадач в файл.
- */
-
+// Это класс для управления задачами с сохранением данных в файл
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private File file; // Файл, в который будут сохраняться данные
 
-    public FileBackedTaskManager(File file) { // Конструктор, принимающий файл для сохранения данных.
+    public FileBackedTaskManager(File file) { // Конструктор для создания менеджера с указанием файла
         this.file = file;
     }
 
-
-    // Метод для загрузки данных из файла и создания экземпляра FileBackedTaskManager
+    // Статический метод для загрузки данных из файла
     public static FileBackedTaskManager loadFromFile(File file) {
-        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
-
-        try (BufferedReader br = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
-            System.out.println("Загрузка из файла: " + file.getPath());
-            br.readLine(); // Пропускаем заголовок файла
-
-            // Чтение файла построчно
-            while (br.ready()) {
-                String line = br.readLine();
-                if (line.isEmpty()) {
-                    continue; // Пропускаем пустые строки
-                }
-
-                // Преобразуем строку в объект Task
-                Task task = fromString(line);
-                int taskID = task.getId();
-
-                // В зависимости от типа задачи добавляем её в соответствующую коллекцию
-                switch (task.getType()) {
-                    case TASK_TYPE:
-                        fileBackedTaskManager.tasks.put(taskID, task);
-                        break;
-                    case EPIC_TYPE:
-                        fileBackedTaskManager.epics.put(taskID, (Epic) task);
-                        break;
-                    case SUBTASK_TYPE:
-                        fileBackedTaskManager.subtasks.put(taskID, (Subtask) task);
-                        break;
-                }
+        FileBackedTaskManager manager = new FileBackedTaskManager(file); // Создаём новый менеджер
+        try {
+            List<String> lines = Files.readAllLines(file.toPath()); // Читаем все строки из файла
+            if (lines.size() <= 1) { // Если только заголовок или файл пустой
+                return manager; // Возвращаем пустой менеджер
             }
 
-        } catch (IOException e) {
-            throw new ManagerSaveException("Ошибка чтения файла" + e.getMessage());
-        }
+            // Пропускаем заголовок и загружаем задачи
+            lines.stream()
+                    .skip(1) // Пропускаем заголовок
+                    .map(manager::fromString) // Преобразуем строку в задачу
+                    .forEach(task -> { // В зависимости от типа добавляем задачу в соответствующее хранилище
+                        switch (task.getType()) {
+                            case TASK_TYPE:
+                                manager.tasks.put(task.getId(), task);
+                                if (task.getStartTime() != null) {
+                                    manager.prioritizedTasks.add(task);
+                                }
+                                break;
+                            case EPIC_TYPE:
+                                manager.epics.put(task.getId(), (Epic) task);
+                                break;
+                            case SUBTASK_TYPE:
+                                manager.subtasks.put(task.getId(), (Subtask) task);
+                                if (task.getStartTime() != null) {
+                                    manager.prioritizedTasks.add(task);
+                                }
+                                Epic epic = manager.epics.get(((Subtask) task).getEpicId());
+                                if (epic != null) {
+                                    epic.addSubtask(task.getId());
+                                    epic.updateTimeAndDuration(manager.subtasks);
+                                }
+                                break;
+                        }
+                        // Обновляем счётчик ID, если загруженный ID больше текущего
+                        if (task.getId() > manager.idCounter) {
+                            manager.idCounter = task.getId();
+                        }
+                    });
 
-        return fileBackedTaskManager;
+            // Пересчитываем время и статус для всех эпиков после загрузки
+            manager.epics.values().forEach(epic -> {
+                epic.updateTimeAndDuration(manager.subtasks); // Обновляем время
+                manager.updateEpicStatus(epic); // Обновляем статус
+            });
+
+        } catch (IOException e) {
+            throw new RuntimeException("Ошибка загрузки из файла", e);
+        }
+        return manager; // Возвращаем загруженный менеджер
     }
 
-    // Метод преобразует объект Task в строку для сохранения в файл.
-    private static String toString(Task task) {
-        return String.format("%d,%s,%s,%s,%s,%s",
+
+    // Метод для преобразования задачи в строку формата CSV
+    private String toString(Task task) { // Преобразуем продолжительность в минуты, если она есть, иначе пустая строка
+        String duration = task.getDuration() != null ? String.valueOf(task.getDuration().toMinutes()) : "";
+        // Преобразуем время начала в строку ISO, если оно есть, иначе пустая строка
+        String startTime = task.getStartTime() != null ? task.getStartTime().toString() : "";
+        // Для подзадач добавляем ID эпика, для остальных — пустая строка
+        String epicId = task instanceof Subtask ? String.valueOf(((Subtask) task).getEpicId()) : "";
+
+        // Форматируем строку CSV с разделителями-запятыми
+        return String.format("%d,%s,%s,%s,%s,%s,%s,%s",
                 task.getId(),
                 task.getType(),
                 task.getName(),
                 task.getStatus(),
                 task.getDescription(),
-                (task instanceof Subtask ? ((Subtask) task).getEpicId() : "") // Для подзадачи добавляем epicId
+                duration, // Добавлено поле
+                startTime, // Добавлено поле
+                epicId // Рефакторинг
         );
     }
 
-    // Преобразует строку из файла в объект Task
-    public static Task fromString(String value) {
-        String[] params = value.split(",");
-
-        if (params.length < 5) {
-            System.out.println("Ошибка: некорректный формат строки -> " + value);
-            return null;
-        }
+    // Метод для создания задачи из строки CSV
+    public Task fromString(String value) {
+        String[] params = value.split(",", 8); // Разделяем строку на части (до 8 полей)
 
         int id = Integer.parseInt(params[0]);
         String type = params[1];
-        if (type == null || type.isEmpty()) {
-            throw new IllegalArgumentException("Некорректный формат строки: отсутствует тип задачи -> " + value);
-        }
         String name = params[2];
         Status status = Status.valueOf(params[3]);
         String description = params[4];
+        Duration duration = params[5].isEmpty() ? null : Duration.ofMinutes(Long.parseLong(params[5])); // Преобразуем
+        // продолжительность из строки в Duration, если она есть
+        LocalDateTime startTime = params[6].isEmpty() ? null : LocalDateTime.parse(params[6]); // Преобразуем
+        // время начала из строки в LocalDateTime, если оно есть
 
-        // В зависимости от типа задачи создаем соответствующий объект
+        // В зависимости от типа создаём нужный объект
         switch (type) {
             case "EPIC_TYPE":
                 Epic epic = new Epic(name, description);
                 epic.setId(Integer.parseInt(params[0]));
                 epic.setStatus(Status.valueOf(params[3]));
-                epic.setTypeTask(TaskType.EPIC_TYPE); // Устанавливаем тип
+                epic.getType(); // Устанавливаем тип
+                epic.setDuration(duration); // Устанавливаем расчетные поля
+                epic.setStartTime(startTime);
                 return epic;
 
             case "TASK_TYPE":
-                Task task = new Task(name, description, status);
+                Task task = new Task(name, description, status, duration, startTime);
                 task.setId(id);
-                task.setTypeTask(TaskType.TASK_TYPE);
+                task.getType();
                 return task;
 
             case "SUBTASK_TYPE":
-                if (params.length < 6) {
+                if (params.length < 8) {
                     System.out.println("Ошибка: у сабтаска нет epicId -> " + value);
                     return null;
                 }
-                int epicId = Integer.parseInt(params[5]); // Получаем ID эпика, к которому относится подзадача
-                Subtask subtask = new Subtask(name, description, status, epicId);
+                int epicId = Integer.parseInt(params[7]); // Получаем ID эпика, к которому относится подзадача
+                Subtask subtask = new Subtask(name, description, status, epicId, duration, startTime);
                 subtask.setId(id);
-                subtask.setTypeTask(TaskType.SUBTASK_TYPE);
+                subtask.getType();
                 return subtask;
 
             default:
@@ -126,28 +145,46 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
 
-    // Метод сохраняет текущее состояние менеджера (задачи, эпики, подзадачи) в файл.
-    void save() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write("id,type,name,status,description,epic"); // Заголовок файла
+    // Сохранение состояния в файл
+    private void save() {
+        try (Writer writer = new FileWriter(file)) { // Открываем файл для записи
+            // Заголовок CSV
+            writer.write("id,type,name,description,status,duration,startTime,epicId\n");
 
-            // Сохраняем задачи
-            for (Task task : tasks.values()) {
-                writer.write("\n" + toString(task));
-            }
+            // Сохраняем все обычные задачи в файл
+            getAllTasks().stream()
+                    .map(this::toString)// Преобразуем задачу в строку CSV
+                    .forEach(line -> {
+                        try {
+                            writer.write(line + "\n"); // Записываем строку в файл
+                        } catch (IOException e) {
+                            throw new RuntimeException("Ошибка записи задачи в файл", e);
+                        }
+                    });
 
-            // Сохраняем эпики
-            for (Epic epic : epics.values()) {
-                writer.write("\n" + toString(epic));
-            }
+            // Сохраняем все эпики в файл
+            getAllEpics().stream()
+                    .map(this::toString) // Преобразуем эпик в строку CSV
+                    .forEach(line -> {
+                        try {
+                            writer.write(line + "\n"); // Записываем строку в файл
+                        } catch (IOException e) {
+                            throw new RuntimeException("Ошибка записи эпика в файл", e);
+                        }
+                    });
 
-            // Сохраняем подзадачи
-            for (Subtask subtask : subtasks.values()) {
-                writer.write("\n" + toString(subtask));
-            }
-
+            // Сохраняем все подзадачи в файл
+            getAllSubtask().stream()
+                    .map(this::toString)// Преобразуем подзадачу в строку CSV
+                    .forEach(line -> {
+                        try {
+                            writer.write(line + "\n"); // Записываем строку в файл
+                        } catch (IOException e) {
+                            throw new RuntimeException("Ошибка записи подзадачи в файл", e);
+                        }
+                    });
         } catch (IOException e) {
-            throw new ManagerSaveException("Ошибка сохранения файла");
+            throw new RuntimeException("Ошибка сохранения в файл", e);
         }
     }
 
