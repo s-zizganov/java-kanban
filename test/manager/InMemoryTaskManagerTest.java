@@ -4,24 +4,24 @@ import entity.Epic;
 import entity.Status;
 import entity.Subtask;
 import entity.Task;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InMemoryTaskManagerTest {
+public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
-    private TaskManager taskManager;
-
-    @BeforeEach
-    public void init() {
-        taskManager = Managers.getDefaultManger();
+    @BeforeEach // Метод, который вызывается перед каждым тестом для инициализации менеджера
+    public void setUp() {
+        taskManager = Managers.getDefaultManger(); // Инициализация taskManager
     }
 
-    //Проверка на корректность добавления задачи
+
     @Test
+        // Тест для проверки добавления задачи
     void addTask() {
         String name = "Сделать ТЗ";
         String description = "Написать тесты";
@@ -29,93 +29,91 @@ class InMemoryTaskManagerTest {
 
         Task createdTask = taskManager.addTask(task);
 
-        Assertions.assertNotNull(createdTask.getId());
-        Assertions.assertEquals(createdTask.getStatus(), Status.NEW);
-        Assertions.assertEquals(createdTask.getDescription(), description);
-        Assertions.assertEquals(createdTask.getName(), name);
-
+        assertNotNull(createdTask.getId());
+        assertEquals(Status.NEW, createdTask.getStatus());
+        assertEquals(description, createdTask.getDescription());
+        assertEquals(name, createdTask.getName());
     }
 
-
-    // Проверка на равенство если равен их id
     @Test
+        // Тест для проверки равенства задач по ID
     void testIdTask() {
         Task task1 = new Task("Таск 1", "Описание 1", Status.NEW);
         Task task2 = new Task("Таск 2", "Описание 2", Status.IN_PROGRESS);
 
+        taskManager.addTask(task1); // Добавляем задачу, чтобы получить ID
         task2.setId(task1.getId()); // Присваиваем одинаковый ID
 
         assertEquals(task1, task2);
     }
 
-
-    // Проверка, что наследники класса Task равны друг другу, если их id равны
     @Test
+        // Тест для проверки равенства эпиков по ID
     void epicsShouldBeEqualIfIdsAreEqual() {
         Epic epic1 = new Epic("Epic 1", "Description Epic 1");
         epic1.setId(1);
         Epic epic2 = new Epic("Epic 2", "Description Epic 2");
         epic2.setId(1);
 
-        // Проверка равенства эпиков по id
-        Assertions.assertEquals(epic1, epic2, "Epics with the same ID should be equal.");
+        assertEquals(epic1, epic2, "Epics with the same ID should be equal.");
     }
 
     @Test
+        // Тест для проверки равенства подзадач по ID
     void subtasksShouldBeEqualIfIdsAreEqual() {
         Subtask subtask1 = new Subtask("Subtask 1", "Description Subtask 1", Status.NEW, 2);
         subtask1.setId(1);
         Subtask subtask2 = new Subtask("Subtask 2", "Description Subtask 2", Status.DONE, 2);
         subtask2.setId(1);
 
-        // Проверка равенства подзадач по id
-        Assertions.assertEquals(subtask1, subtask2, "Subtasks with the same ID should be equal.");
+        assertEquals(subtask1, subtask2, "Subtasks with the same ID should be equal.");
     }
 
-
-    // Утилитарный класс всегда возвращает проинициализированный и готовый к работе экземпляр менеджера
     @Test
+        // Тест для проверки инициализации менеджера задач
     void managersShouldReturnInitializedInstances() {
-
         assertNotNull(taskManager, "TaskManager instance should not be null.");
         assertTrue(taskManager instanceof InMemoryTaskManager, "Manager should be an instance of InMemoryTaskManager.");
     }
 
     @Test
+        // Тест для проверки инициализации менеджера истории
     void testHistoryManagersReturnInitialized() {
         HistoryManager historyManager = Managers.getDefaultHistory();
         assertNotNull(historyManager);
         assertTrue(historyManager instanceof InMemoryHistoryManager);
     }
 
-
-    // Проверьте, что InMemoryTaskManager действительно добавляет задачи разного типа и может найти их по id;
     @Test
+        // Тест для проверки добавления разных типов задач
     void testAddDifferentTypes() {
-        // Создаём задачи
-        Task task = new Task("Task 1", "Description 1", Status.NEW);
+        // Создаём задачи с временем и продолжительностью
+        Task task = new Task("Task 1", "Description 1", Status.NEW,
+                Duration.ofMinutes(60), LocalDateTime.of(2025, 3, 1, 10, 0));
         Epic epic = new Epic("Epic 1", "Description 1");
         taskManager.addTask(task);
         taskManager.addEpic(epic);
 
-        // Устанавливаем правильный epicId для Subtask
-        Subtask subtask = new Subtask("Subtask 1", "Description 1", Status.NEW, epic.getId());
+        Subtask subtask = new Subtask("Subtask 1", "Description 1", Status.NEW, epic.getId(),
+                Duration.ofMinutes(30), LocalDateTime.of(2025, 3, 1, 11, 0));
         taskManager.addSubtask(subtask);
 
-        // Проверяем добавление
+        // Получаем добавленные объекты из менеджера
         Task receivedTask = taskManager.getTask(task.getId());
         Epic receivedEpic = taskManager.getEpic(epic.getId());
         Subtask receivedSubtask = taskManager.getSubtask(subtask.getId());
 
-        // Проверяем, что задачи найдены
+        // Проверяем, что все объекты были добавлены
         assertNotNull(receivedTask);
         assertNotNull(receivedEpic);
         assertNotNull(receivedSubtask);
 
-        // Проверяем содержимое задач
+        // Проверяем поля задач
         assertEquals(task.getName(), receivedTask.getName());
         assertEquals(task.getDescription(), receivedTask.getDescription());
         assertEquals(task.getStatus(), receivedTask.getStatus());
+        assertEquals(task.getDuration(), receivedTask.getDuration());
+        assertEquals(task.getStartTime(), receivedTask.getStartTime());
 
         assertEquals(epic.getName(), receivedEpic.getName());
         assertEquals(epic.getDescription(), receivedEpic.getDescription());
@@ -123,82 +121,88 @@ class InMemoryTaskManagerTest {
         assertEquals(subtask.getName(), receivedSubtask.getName());
         assertEquals(subtask.getDescription(), receivedSubtask.getDescription());
         assertEquals(subtask.getStatus(), receivedSubtask.getStatus());
+        assertEquals(subtask.getDuration(), receivedSubtask.getDuration());
+        assertEquals(subtask.getStartTime(), receivedSubtask.getStartTime());
     }
 
-
-    // Проверьте, что задачи с заданным id и сгенерированным id не конфликтуют внутри менеджера;
     @Test
+        // Тест для проверки работы задач с заданным и сгенерированным ID
     void testTaskWithCustomAndGeneratedId() {
-        // Создаём задачу с заданным id
+        // Создаём задачу с заданным ID
         Task customIdTask = new Task("Задача с заданным ID", "Описание 1", Status.NEW);
-        customIdTask.setId(100); // Задаём id вручную
+        customIdTask.setId(100);
         taskManager.addTask(customIdTask);
 
-        // Создаём задачу с автоматически сгенерированным id
-        Task generatedIdTask = new Task("Автоматическое ID", "Описание 2", Status.NEW);
-        taskManager.addTask(generatedIdTask); // id генерируется внутри менеджера
+        // Создаём задачу с автоматически сгенерированным ID
+        Task generatedIdTask = new Task("Автоматическое ID", "Описание 2", Status.NEW,
+                Duration.ofMinutes(60), LocalDateTime.of(2025, 3, 1, 10, 0));
+        taskManager.addTask(generatedIdTask); // Добавляем задачу, ID генерируется менеджером
 
-        // Проверяем, что обе задачи существуют
+        // Получаем обе задачи из менеджера
         Task receivedCustomIdTask = taskManager.getTask(customIdTask.getId());
         Task receivedGeneratedIdTask = taskManager.getTask(generatedIdTask.getId());
 
-        // Проверяем, что задачи корректно добавлены и возвращаются по id
-        assertNotNull(receivedCustomIdTask, "Задача с заданным id должна существовать");
-        assertNotNull(receivedGeneratedIdTask, "Задача с сгенерированным id должна существовать");
+        // Проверяем, что обе задачи существуют
+        assertNotNull(receivedCustomIdTask, "Задача с заданным id=" + receivedCustomIdTask.getId() +
+                " должна существовать");
+        assertNotNull(receivedGeneratedIdTask, "Задача с сгенерированным id=" + receivedGeneratedIdTask.getId() +
+                " должна существовать");
 
-        // Проверяем, что данные задач совпадают
+        // Проверяем поля задачи с заданным ID
         assertEquals(customIdTask.getName(), receivedCustomIdTask.getName());
         assertEquals(customIdTask.getDescription(), receivedCustomIdTask.getDescription());
         assertEquals(customIdTask.getStatus(), receivedCustomIdTask.getStatus());
 
+        // Проверяем поля задачи со сгенерированным ID
+
         assertEquals(generatedIdTask.getName(), receivedGeneratedIdTask.getName());
         assertEquals(generatedIdTask.getDescription(), receivedGeneratedIdTask.getDescription());
         assertEquals(generatedIdTask.getStatus(), receivedGeneratedIdTask.getStatus());
+        assertEquals(generatedIdTask.getDuration(), receivedGeneratedIdTask.getDuration());
 
-        // Проверяем, что id задач разные
+        // Проверяем, что ID задач разные
         assertNotEquals(customIdTask.getId(), generatedIdTask.getId(),
                 "Id задач не должны конфликтовать (совпадать)");
     }
 
-
-    // Тест, в котором проверяется неизменность задачи (по всем полям) при добавлении задачи в менеджер
     @Test
+        // Тест для проверки неизменности задачи после добавления в менеджер
     void taskShouldRemainUnchangedInTaskManager() {
-        // Создаём новую задачу
-        Task originalTask = new Task("Task 1", "Description 1", Status.NEW);
+        // Создаём задачу с временем и продолжительностью
+        Task originalTask = new Task("Task 1", "Description 1", Status.NEW,
+                Duration.ofMinutes(60), LocalDateTime.of(2025, 3, 1, 10, 0));
+        taskManager.addTask(originalTask); // Добавляем задачу в менеджер
 
-        // Добавляем задачу в менеджер
-        taskManager.addTask(originalTask);
 
-        // Получаем задачу из менеджера по её ID
-        Task retrievedTask = taskManager.getTask(originalTask.getId());
+        Task retrievedTask = taskManager.getTask(originalTask.getId());  // Получаем задачу из менеджера
 
-        // Проверяем, что все поля задачи совпадают с изначальными
-        Assertions.assertEquals(originalTask.getName(), retrievedTask.getName());
-        Assertions.assertEquals(originalTask.getDescription(), retrievedTask.getDescription());
-        Assertions.assertEquals(originalTask.getStatus(), retrievedTask.getStatus());
-        Assertions.assertEquals(originalTask.getId(), retrievedTask.getId());
+        // Проверяем, что все поля остались неизменными
+        assertEquals(originalTask.getName(), retrievedTask.getName());
+        assertEquals(originalTask.getDescription(), retrievedTask.getDescription());
+        assertEquals(originalTask.getStatus(), retrievedTask.getStatus());
+        assertEquals(originalTask.getId(), retrievedTask.getId());
+        assertEquals(originalTask.getDuration(), retrievedTask.getDuration());
+        assertEquals(originalTask.getStartTime(), retrievedTask.getStartTime());
     }
 
-
-    // Убедитесь, что задачи, добавляемые в HistoryManager, сохраняют предыдущую версию задачи и её данных.
     @Test
+        // Тест для проверки сохранения данных задачи в истории
     void historyManagerShouldPreserveTaskData() {
+        HistoryManager historyManager = Managers.getDefaultHistory(); // Создаём менеджер истории
+        // Создаём задачу с временем и продолжительностью:
+        Task task = new Task("Task 1", "Description 1", Status.NEW,
+                Duration.ofMinutes(60), LocalDateTime.of(2025, 3, 1, 10, 0));
 
-        HistoryManager historyManager = Managers.getDefaultHistory();
-        // Создаём новую задачу
-        Task task = new Task("Task 1", "Description 1", Status.NEW);
+        historyManager.add(task); // Добавляем задачу в историю
 
-        // Добавляем задачу в историю через HistoryManager
-        historyManager.add(task);
+        Task retrievedFromHistory = historyManager.getHistory().get(0); // Получаем задачу из истории
 
-        // Получаем задачу из истории (это первая добавленная задача в списке)
-        Task retrievedFromHistory = historyManager.getHistory().get(0);
-
-        // Проверяем, что все поля задачи в истории совпадают с изначальными
-        Assertions.assertEquals(task.getName(), retrievedFromHistory.getName());
-        Assertions.assertEquals(task.getDescription(), retrievedFromHistory.getDescription());
-        Assertions.assertEquals(task.getStatus(), retrievedFromHistory.getStatus());
-        Assertions.assertEquals(task.getId(), retrievedFromHistory.getId());
+        // Проверяем, что все поля задачи в истории совпадают с исходными
+        assertEquals(task.getName(), retrievedFromHistory.getName());
+        assertEquals(task.getDescription(), retrievedFromHistory.getDescription());
+        assertEquals(task.getStatus(), retrievedFromHistory.getStatus());
+        assertEquals(task.getId(), retrievedFromHistory.getId());
+        assertEquals(task.getDuration(), retrievedFromHistory.getDuration());
+        assertEquals(task.getStartTime(), retrievedFromHistory.getStartTime());
     }
 }

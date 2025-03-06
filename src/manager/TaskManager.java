@@ -5,6 +5,7 @@ import entity.Subtask;
 import entity.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface TaskManager {
 
@@ -51,4 +52,7 @@ public interface TaskManager {
     void updateSubtask(Subtask subtask);
 
     ArrayList<Subtask> getAllSubtask();
+
+    // Новый метод для получения отсортированного списка задач
+    List<Task> getPrioritizedTasks();
 }
