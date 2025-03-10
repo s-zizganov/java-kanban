@@ -4,11 +4,13 @@ import entity.Epic;
 import entity.Subtask;
 import entity.Task;
 import entity.Status;
+import exception.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -146,7 +148,7 @@ public class InMemoryHistoryManagerTest {
         historyManager.add(task2);
         historyManager.remove(task2.getId()); // Удаляем вторую задачу (из конца)
 
-        List<Task> history = historyManager.getHistory();
+        ArrayList<Task> history = historyManager.getHistory();
         assertEquals(1, history.size()); // Проверяем, что осталась 1 задача
         assertEquals(task1, history.get(0)); // Проверяем, что это первая задача
     }
@@ -168,8 +170,9 @@ public class InMemoryHistoryManagerTest {
         int subtaskId = subtask.getId();
         taskManager.deleteSubtask(subtaskId);
 
-        // Проверяем, что подзадача удалена
-        assertNull(taskManager.getSubtask(subtaskId), "Подзадача должна быть удалена.");
+        // Проверяем, что вызов getSubtask выбрасывает исключение
+        assertThrows(NotFoundException.class, () -> taskManager.getSubtask(subtaskId),
+                "Подзадача должна быть удалена, и getSubtask должен выбросить NotFoundException");
         // Проверяем, что ID подзадачи удален из эпика
         assertFalse(epic.getSubtaskIdList().contains(subtaskId));
     }

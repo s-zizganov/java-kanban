@@ -3,10 +3,12 @@ package manager;
 import entity.Epic;
 import entity.Subtask;
 import entity.Task;
+import exception.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
 
+// Интерфейс для управления задачами, эпиками и подзадачами
 public interface TaskManager {
 
 
@@ -15,7 +17,7 @@ public interface TaskManager {
 
     void deleteTask(int id);
 
-    Task getTask(int id);
+    Task getTask(int id) throws NotFoundException; // 9. Обновили, чтобы выбрасывал исключение
 
     ArrayList<Task> getAllTasks();
 
@@ -29,7 +31,7 @@ public interface TaskManager {
 
     void deleteEpic(int id);
 
-    Epic getEpic(int id);
+    Epic getEpic(int id) throws NotFoundException; // 9. Обновили, чтобы выбрасывал исключение
 
     ArrayList<Epic> getAllEpics();
 
@@ -43,7 +45,7 @@ public interface TaskManager {
 
     void deleteSubtask(int id);
 
-    Subtask getSubtask(int id);
+    Subtask getSubtask(int id) throws NotFoundException; // 9. Обновили, чтобы выбрасывал исключение
 
     ArrayList<Subtask> getSubtasksForEpic(int epicId); //
 

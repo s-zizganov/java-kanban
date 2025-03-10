@@ -4,6 +4,7 @@ import entity.Epic;
 import entity.Status;
 import entity.Subtask;
 import entity.Task;
+import exception.NotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -79,9 +80,11 @@ public class InMemoryTaskManager implements TaskManager {
     @Override // Метод для получения задачи по ID
     public Task getTask(int id) {
         Task task = tasks.get(id); // Получаем задачу из хранилища
-        if (task != null) {
-            historyManager.add(task); // Добавляем задачу в историю просмотров
+        if (task == null) {
+            String errorMessage = String.format("Задача с id %d  не найдена", id);
+            throw new NotFoundException(errorMessage); // 9. Обновили, чтобы выбрасывал исключение
         }
+        historyManager.add(task); // Добавляем задачу в историю просмотров
         return task;
     }
 
@@ -160,9 +163,11 @@ public class InMemoryTaskManager implements TaskManager {
     @Override // Метод для получения эпика по ID
     public Epic getEpic(int id) {
         Epic epic = epics.get(id);
-        if (epic != null) {
-            historyManager.add(epic);
+        if (epic == null) {
+            String errorMessage = String.format("Эпик с id %d  не найден", id);
+            throw new NotFoundException(errorMessage); // 9. Обновили, чтобы выбрасывал исключение
         }
+        historyManager.add(epic);
         return epic;
     }
 
@@ -242,9 +247,11 @@ public class InMemoryTaskManager implements TaskManager {
     @Override // Метод для получения подзадачи по ID
     public Subtask getSubtask(int id) {
         Subtask subtask = subtasks.get(id); // Получаем подзадачу из хранилища
-        if (subtask != null) {
-            historyManager.add(subtask); // Добавляем подзадачу в историю просмотров
+        if (subtask == null) {
+            String errorMessage = String.format("Подзадача с id %d  не найден", id);
+            throw new NotFoundException(errorMessage); // 9. Обновили, чтобы выбрасывал исключение
         }
+        historyManager.add(subtask); // Добавляем подзадачу в историю просмотров
         return subtask;
     }
 

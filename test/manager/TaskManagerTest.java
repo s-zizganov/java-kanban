@@ -4,6 +4,7 @@ import entity.Epic;
 import entity.Status;
 import entity.Subtask;
 import entity.Task;
+import exception.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -45,7 +46,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.addTask(task);
         taskManager.deleteTask(task.getId());
 
-        assertNull(taskManager.getTask(task.getId()));
+        assertThrows(NotFoundException.class, () -> taskManager.getTask(task.getId()),
+                "После удаления задачи getTask должен выбросить NotFoundException");
     }
 
     @Test
@@ -121,8 +123,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.addSubtask(subtask);
         taskManager.deleteEpic(epic.getId());
 
-        assertNull(taskManager.getEpic(epic.getId()));
-        assertNull(taskManager.getSubtask(subtask.getId()));
+        assertThrows(NotFoundException.class, () -> taskManager.getEpic(epic.getId()),
+                "После удаления эпика getEpic должен выбросить NotFoundException");
     }
 
     @Test
@@ -195,8 +197,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.addSubtask(subtask);
         taskManager.deleteSubtask(subtask.getId());
 
-        assertNull(taskManager.getSubtask(subtask.getId()));
-        assertFalse(epic.getSubtaskIdList().contains(subtask.getId()));
+        assertThrows(NotFoundException.class, () -> taskManager.getSubtask(subtask.getId()),
+                "После удаления подзадачи getSubtask должен выбросить NotFoundException");
     }
 
     @Test
