@@ -51,7 +51,7 @@ public class HttpTaskServerSubtasksTest {
 
     // Тест на успешное добавление подзадачи
     @Test
-    public void testAddSubtask_Success() throws IOException, InterruptedException {
+    public void testAddSubtaskSuccess() throws IOException, InterruptedException {
         // Создаём эпик, к которому будет привязана подзадача
         Epic epic = new Epic("Test Epic", "Description");
         taskManager.addEpic(epic);
@@ -81,7 +81,7 @@ public class HttpTaskServerSubtasksTest {
 
     // Тест на успешное получение подзадачи по ID
     @Test
-    public void testGetSubtaskById_Success() throws IOException, InterruptedException {
+    public void testGetSubtaskByIdSuccess() throws IOException, InterruptedException {
         // Создаём эпик, к которому будет привязана подзадача
         Epic epic = new Epic("Test Epic", "Description");
         taskManager.addEpic(epic);

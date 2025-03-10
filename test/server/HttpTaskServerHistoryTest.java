@@ -49,7 +49,7 @@ public class HttpTaskServerHistoryTest {
 
     // Тест на успешное получение истории просмотров
     @Test
-    public void testGetHistory_Success() throws IOException, InterruptedException {
+    public void testGetHistorySuccess() throws IOException, InterruptedException {
         // создаем задачу
         Task task = new Task("Test Task", "Description", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
         taskManager.addTask(task);

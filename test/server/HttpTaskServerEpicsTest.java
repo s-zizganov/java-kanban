@@ -51,7 +51,7 @@ public class HttpTaskServerEpicsTest {
 
     // Тест на успешное добавление эпика
     @Test
-    public void testAddEpic_Success() throws IOException, InterruptedException {
+    public void testAddEpicSuccess() throws IOException, InterruptedException {
         // Создаём эпик
         Epic epic = new Epic("Test Epic", "Description");
         String epicJson = gson.toJson(epic);
@@ -76,7 +76,7 @@ public class HttpTaskServerEpicsTest {
 
     // Тест на успешное получение подзадач эпика
     @Test
-    public void testGetSubtasksForEpic_Success() throws IOException, InterruptedException {
+    public void testGetSubtasksForEpicSuccess() throws IOException, InterruptedException {
         // Создаём эпик
         Epic epic = new Epic("Test Epic", "Description");
         taskManager.addEpic(epic);

@@ -71,7 +71,7 @@ public class TaskHandler extends BaseHttpHandler {
         } catch (IllegalArgumentException e) { // Если данные некорректны
             sendHasInteractions(exchange, e.getMessage()); // Отправляем ошибку 406
         } catch (Exception e) { // При любой другой ошибке
-            sendInternalError(exchange, "Внутрення ошибка сервера: " + e.getMessage()); // Код 500
+            sendInternalError(exchange, String.format("Внутренняя ошибка сервера: %s", e.getMessage())); // Код 500
         }
     }
 }

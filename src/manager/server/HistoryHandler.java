@@ -24,7 +24,7 @@ public class HistoryHandler extends BaseHttpHandler {
                 String response = gson.toJson(historyManager.getHistory()); ///////
                 sendText(exchange, response, 200);
             } catch (Exception e) {
-                sendInternalError(exchange, "Внутренняя ошибка сервера: " + e.getMessage());
+                sendInternalError(exchange, String.format("Внутренняя ошибка сервера: %s", e.getMessage()));
             }
         } else {
             // Если метод не GET, отправляем ошибку 405 (метод не поддерживается)

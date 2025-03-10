@@ -50,7 +50,7 @@ public class HttpTaskServerTasksTest {
 
     // Тест на успешное добавление задачи
     @Test
-    public void testAddTask_Success() throws IOException, InterruptedException {
+    public void testAddTaskSuccess() throws IOException, InterruptedException {
         // Создаём задачу
         Task task = new Task("Test Task", "Description", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
         String taskJson = gson.toJson(task);
@@ -77,7 +77,7 @@ public class HttpTaskServerTasksTest {
 
     // Тест для проверки, что возвращается код 500 при неверном формате данных.
     @Test
-    public void testAddTask_InvalidJson() throws IOException, InterruptedException {
+    public void testAddTaskInvalidJson() throws IOException, InterruptedException {
         // Отправляем некорректный JSON
         String invalidJson = "{invalid json}";
 
@@ -95,7 +95,7 @@ public class HttpTaskServerTasksTest {
 
     // Тест на успешное получение задачи по ID
     @Test
-    public void testGetTaskById_Success() throws IOException, InterruptedException {
+    public void testGetTaskByIdSuccess() throws IOException, InterruptedException {
         // Добавляем задачу
         Task task = new Task("Test Task", "Description", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
         taskManager.addTask(task);
@@ -118,7 +118,7 @@ public class HttpTaskServerTasksTest {
 
     // Тест для проверки, что возвращается код 500 при несуществующем ID.
     @Test
-    public void testGetTaskById_NotFound() throws IOException, InterruptedException {
+    public void testGetTaskByIdNotFound() throws IOException, InterruptedException {
         // Отправляем запрос с несуществующим ID
         URI url = URI.create("http://localhost:8080/tasks/999");
         HttpRequest request = HttpRequest.newBuilder()
@@ -133,7 +133,7 @@ public class HttpTaskServerTasksTest {
 
     // Тест на успешное удаление задачи
     @Test
-    public void testDeleteTask_Success() throws IOException, InterruptedException {
+    public void testDeleteTaskSuccess() throws IOException, InterruptedException {
         // Добавляем задачу
         Task task = new Task("Test Task", "Description", Status.NEW, Duration.ofMinutes(30), LocalDateTime.now());
         taskManager.addTask(task);

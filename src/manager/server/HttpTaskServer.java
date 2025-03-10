@@ -52,7 +52,7 @@ public class HttpTaskServer {
 
     // Метод для запуска сервера
     public void start() {
-        System.out.println("Сервер запущен на порту " + PORT); // Сообщаем в консоль, что сервер работает
+        System.out.println(String.format("Сервер запущен на порту %d", PORT)); // Сообщаем в консоль, что сервер работает
         server.start(); // Запускаем сервер
     }
 
@@ -69,7 +69,7 @@ public class HttpTaskServer {
             HttpTaskServer server = new HttpTaskServer(); // Создаём сервер с настройками по умолчанию
             server.start(); // Запускаем сервер
         } catch (IOException e) {
-            System.out.println("Ошибка при запуске сервера: " + e.getMessage()); // Обрабатываем ошибки запуска
+            System.out.println(String.format("Ошибка при запуске сервера: %s", e.getMessage())); // Ошибки запуска
         }
     }
 

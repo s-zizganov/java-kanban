@@ -26,7 +26,7 @@ public class PrioritizedHandler extends BaseHttpHandler {
                 sendText(exchange, response, 200); // Отправляем ответ с кодом 200
             } catch (IOException e) {
                 // При ошибке отправляем код 500
-                sendInternalError(exchange, "Внутренняя ошибка сервера: " + e.getMessage());
+                sendInternalError(exchange, String.format("Внутренняя ошибка сервера: %s", e.getMessage()));
             }
         } else {
             // Если метод не GET, отправляем ошибку 405 (метод не поддерживается)

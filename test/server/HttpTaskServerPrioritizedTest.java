@@ -47,7 +47,7 @@ public class HttpTaskServerPrioritizedTest {
 
     // Тест на успешное получение списка задач, отсортированных по приоритету
     @Test
-    public void testGetPrioritizedTasks_Success() throws IOException, InterruptedException {
+    public void testGetPrioritizedTasksSuccess() throws IOException, InterruptedException {
         Task task1 = new Task("Task 1", "Description 1", Status.NEW, Duration.ofMinutes(30),
                 LocalDateTime.now()); // Задача с текущим временем
         Task task2 = new Task("Task 2", "Description 2", Status.NEW, Duration.ofMinutes(30),
